@@ -1,0 +1,1 @@
+echo ya | sudo -S mv S21_* /usr/local/bin
