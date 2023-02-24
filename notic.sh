@@ -1,16 +1,14 @@
-#!/bin/bash
 
-if [[ ${2} == "1" ]] && [[ $CI_JOB_STATUS == "success" ]]; then
-    exit;
+if [[ $CI_JOB_STATUS == "success" ]]; then
+    CI_JOB_STATUS="success"
+else
+  CI_JOB_STATUS="failed"
 fi
-
-STATUS="$(echo "$CI_JOB_STATUS")"
 
 TELEGRAM_USER_ID=789640078
 TELEGRAM_BOT_TOKEN="5927752679:AAEA28KmUcl0yjOG3sqMP-IBXfJpNO7kVRQ"
-TIME=60
 
 URL="https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage"
-TEXT="$(echo ${1}) status: $STATUS"
+TEXT="Status: $CI_JOB_STATUS%0A%0AProject:+$CI_PROJECT_NAME%0AName:+$CI_JOB_NAME"
 
 curl -s -d "chat_id=$TELEGRAM_USER_ID&disable_web_page_preview=1&text=$TEXT" $URL > /dev/null
