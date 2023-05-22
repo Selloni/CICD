@@ -1,0 +1,64 @@
+default:
+  tags: [bash, cicd]
+
+stages:
+  - build
+  - style
+  - test
+  - deploy
+
+
+build: 
+  stage: build
+  when: on_success
+  script:
+    - cd src/cat
+    - make
+    - cd ../grep
+    - make
+  artifacts:
+    paths:
+      - src/cat/
+      - src/grep/
+    expire_in: 30 days
+  after_script:
+    - bash notic.sh
+
+style:
+  stage: style
+  when: on_success
+  script:
+    - cd src/cat
+    - make clang
+    - cd ../grep
+    - make clang
+  after_script:
+    - chmod +x notic.sh
+    - bash notic.sh
+  
+test:
+  stage: test
+  when: on_success
+  script:
+    - cd src/cat
+    - make test
+    - cd ../grep
+    - make test
+  after_script:
+    - chmod +x notic.sh
+    - bash notic.sh
+
+deploy:
+  stage: deploy
+  when: manual
+  script:
+    - chmod +x script.sh
+    - bash script.sh
+  after_script:
+    - chmod +x notic.sh
+    - bash notic.sh
+  
+
+
+
+ 
